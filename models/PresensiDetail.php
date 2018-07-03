@@ -14,6 +14,7 @@ use Yii;
  * @property double $lng
  * @property string $waktu
  * @property int $jarak
+ * * @property string $proses
  *
  * @property TbMahasiswa $nim0
  * @property TbPresensi $presensi
@@ -28,15 +29,20 @@ class PresensiDetail extends \yii\db\ActiveRecord
         return 'tb_presensi_detail';
     }
 
+    public static function primaryKey()
+    {
+        return ['id_presensi'];
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id_presensi', 'nim', 'status', 'lat', 'lng', 'waktu', 'jarak'], 'required'],
+            [['id_presensi', 'nim', 'status', 'lat', 'lng', 'waktu', 'jarak', 'proses'], 'required'],
             [['id_presensi', 'nim', 'jarak'], 'integer'],
-            [['status'], 'string'],
+            [['status', 'proses'], 'string'],
             [['lat', 'lng'], 'number'],
             [['waktu'], 'safe'],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => Mahasiswa::className(), 'targetAttribute' => ['nim' => 'nim']],
@@ -75,4 +81,6 @@ class PresensiDetail extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Presensi::className(), ['id_presensi' => 'id_presensi']);
     }
+
+
 }

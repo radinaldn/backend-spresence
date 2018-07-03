@@ -12,6 +12,7 @@ use Yii;
  * @property string $pertemuan
  * @property int $id_ruangan
  * @property string $waktu
+ * @property string $status
  * @property string $qr_code
  *
  * @property TbMengajar $mengajar
@@ -36,7 +37,7 @@ class Presensi extends \yii\db\ActiveRecord
         return [
             [['id_mengajar', 'pertemuan', 'id_ruangan'], 'required'],
             [['id_mengajar', 'id_ruangan'], 'integer'],
-            [['pertemuan'], 'string'],
+            [['pertemuan', 'status'], 'string'],
             [['waktu'], 'safe'],
             [['qr_code'], 'string', 'max' => 255],
             [['id_mengajar'], 'exist', 'skipOnError' => true, 'targetClass' => Mengajar::className(), 'targetAttribute' => ['id_mengajar' => 'id_mengajar']],
@@ -55,6 +56,7 @@ class Presensi extends \yii\db\ActiveRecord
             'pertemuan' => 'Pertemuan',
             'id_ruangan' => 'Id Ruangan',
             'waktu' => 'Waktu',
+            'status' => 'Status',
             'qr_code' => 'Qr Code',
         ];
     }

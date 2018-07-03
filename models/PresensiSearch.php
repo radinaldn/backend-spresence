@@ -18,7 +18,7 @@ class PresensiSearch extends Presensi
     public function rules()
     {
         return [
-            [['id_presensi', 'id_mengajar', 'id_kelas', 'pertemuan', 'id_ruangan', 'waktu', 'qr_code'], 'safe'],
+            [['id_presensi', 'id_mengajar', 'pertemuan', 'id_ruangan', 'waktu', 'qr_code'], 'safe'],
         ];
     }
 
@@ -63,7 +63,6 @@ class PresensiSearch extends Presensi
 
         $query->andFilterWhere(['like', 'id_presensi', $this->id_presensi])
             ->andFilterWhere(['like', 'id_mengajar', $this->id_mengajar])
-            ->andFilterWhere(['like', 'id_kelas', $this->id_kelas])
             ->andFilterWhere(['like', 'pertemuan', $this->pertemuan])
             ->andFilterWhere(['like', 'id_ruangan', $this->id_ruangan])
             ->andFilterWhere(['like', 'qr_code', $this->qr_code]);

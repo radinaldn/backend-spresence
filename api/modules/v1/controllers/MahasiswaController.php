@@ -16,6 +16,9 @@ use Yii;
 
 class MahasiswaController extends Controller
 {
+    /*
+     * fungsi mendapatkan semua data mahasiswa, awas berat
+     */
     public function actionFindAll(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = null;
@@ -30,6 +33,9 @@ class MahasiswaController extends Controller
         return $response;
     }
 
+    /*
+     * fungsi login
+     */
     public function actionLogin(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = null;

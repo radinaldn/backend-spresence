@@ -15,7 +15,10 @@ use Yii;
 
 class DosenController extends Controller
 {
-    // get all dosen
+    /*
+    get all dosen
+    */
+
     public function actionFindAll(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = null;
@@ -26,7 +29,9 @@ class DosenController extends Controller
         return $response;
     }
 
-    // login dosen
+    /*
+     * login dosen
+     */
     public function actionLogin(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = null;
@@ -54,6 +59,33 @@ class DosenController extends Controller
             } else {
                 $response['status'] = 'failed';
             }
+        }
+
+        return $response;
+    }
+
+    /*
+    update status kehadiran dosen
+    */
+    public function actionUpdateLocation(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = null;
+
+        if(Yii::$app->request->isPost){
+            $data = Yii::$app->request->post();
+            $nip = $data['nip'];
+            $status_kehadiran = $data['status_kehadiran'];
+
+            $dosen = Dosen::find()
+                    ->where(['nip' => $nip])
+                    ->one();
+
+            $dosen->status_kehadiran = $status_kehadiran;
+            $dosen->update(false);
+
+            $response['code'] = '200';
+            $response['status'] = 'success';
+            $response['message'] = 'Kehadiran berhasil diperbarui';
         }
 
         return $response;
