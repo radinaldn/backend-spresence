@@ -18,8 +18,8 @@ class MengajarSearch extends Mengajar
     public function rules()
     {
         return [
-            [['id_mengajar'], 'safe'],
-            [['id_matakuliah', 'nip'], 'integer'],
+            [['id_mengajar', 'id_matakuliah', 'nip', 'id_kelas', 'id_semester_aktif'], 'integer'],
+            [['waktu_mulai'], 'safe'],
         ];
     }
 
@@ -59,11 +59,13 @@ class MengajarSearch extends Mengajar
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id_mengajar' => $this->id_mengajar,
             'id_matakuliah' => $this->id_matakuliah,
             'nip' => $this->nip,
+            'waktu_mulai' => $this->waktu_mulai,
+            'id_kelas' => $this->id_kelas,
+            'id_semester_aktif' => $this->id_semester_aktif,
         ]);
-
-        $query->andFilterWhere(['like', 'id_mengajar', $this->id_mengajar]);
 
         return $dataProvider;
     }

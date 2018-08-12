@@ -27,8 +27,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id_mengajar',
-            'matakuliah.nama',
-            'nip0.nama',
+            'id_matakuliah',
+            'nip',
+            'waktu_mulai',
+            'id_kelas',
+            //'id_semester_aktif',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

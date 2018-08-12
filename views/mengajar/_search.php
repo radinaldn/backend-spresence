@@ -24,6 +24,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nip') ?>
 
+    <?= $form->field($model, 'waktu_mulai') ?>
+
+    <?= $form->field($model, 'id_kelas') ?>
+
+    <?php // echo $form->field($model, 'id_semester_aktif') ?>
+
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>

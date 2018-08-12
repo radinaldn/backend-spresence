@@ -18,7 +18,7 @@ class MatakuliahSearch extends Matakuliah
     public function rules()
     {
         return [
-            [['id_matakuliah', 'sks', 'id_semester_aktif'], 'integer'],
+            [['id_matakuliah', 'sks'], 'integer'],
             [['nama'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class MatakuliahSearch extends Matakuliah
         $query->andFilterWhere([
             'id_matakuliah' => $this->id_matakuliah,
             'sks' => $this->sks,
-            'id_semester_aktif' => $this->id_semester_aktif,
         ]);
 
         $query->andFilterWhere(['like', 'nama', $this->nama]);

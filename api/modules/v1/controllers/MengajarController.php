@@ -28,7 +28,7 @@ class MengajarController extends Controller
         if(Yii::$app->request->isGet){
             $model = Mengajar::find()
                     ->joinWith('matakuliah')
-                    ->joinWith('matakuliah.semesterAktif')
+                    ->joinWith('semesterAktif')
                     ->where(['tb_semester_aktif.status' => 'Aktif'])
                     ->andWhere(['nip' => $nip])
                     ->orderBy(['waktu_mulai' => SORT_ASC])
@@ -50,11 +50,11 @@ class MengajarController extends Controller
 
         if(Yii::$app->request->isGet){
             $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as nama_dosen,
-                    tb_kelas.nama as nama_kelas, tb_mengajar.waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
-                    as hari, tb_matakuliah.nama as nama_matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
+                    tb_kelas.nama as nama_kelas, tb_mengajar.waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) as hari,
+                    tb_matakuliah.nama as nama_matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
                     FROM tb_mengajar INNER JOIN tb_matakuliah, tb_semester_aktif, tb_dosen, tb_kelas 
                     WHERE tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
-                    AND tb_matakuliah.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
+                    AND tb_mengajar.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
                     AND tb_mengajar.nip = tb_dosen.nip 
                     AND tb_mengajar.id_kelas = tb_kelas.id_kelas 
                     AND tb_mengajar.nip = '$nip' 
@@ -77,11 +77,11 @@ class MengajarController extends Controller
 
         if (Yii::$app->request->isGet){
             $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as nama_dosen,
-                    tb_kelas.nama as nama_kelas, tb_mengajar.waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
+                    tb_kelas.nama as nama_kelas, DATE_FORMAT(waktu_mulai,'%H:%i:%s') as waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
                     as hari, tb_matakuliah.nama as nama_matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
                     FROM tb_mengajar INNER JOIN tb_matakuliah, tb_semester_aktif, tb_dosen, tb_kelas 
                     WHERE tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
-                    AND tb_matakuliah.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
+                    AND tb_mengajar.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
                     AND tb_mengajar.nip = tb_dosen.nip 
                     AND tb_mengajar.id_kelas = tb_kelas.id_kelas 
                     AND tb_mengajar.nip = '$nip' 
@@ -95,4 +95,6 @@ class MengajarController extends Controller
 
         return $response;
     }
+
+
 }

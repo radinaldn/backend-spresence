@@ -21,6 +21,12 @@ use Yii;
  */
 class PresensiDetail extends \yii\db\ActiveRecord
 {
+
+    // Property
+    const OK = "OK";
+    const TIDAK_HADIR = "Tidak Hadir";
+
+
     /**
      * {@inheritdoc}
      */
@@ -31,7 +37,7 @@ class PresensiDetail extends \yii\db\ActiveRecord
 
     public static function primaryKey()
     {
-        return ['id_presensi'];
+        return ['id_presensi', 'nim'];
     }
 
     /**

@@ -12,7 +12,7 @@ use Yii;
  * @property int $tahun
  * @property string $status
  *
- * @property TbMatakuliah[] $tbMatakuliahs
+ * @property TbMengajar[] $tbMengajars
  */
 class SemesterAktif extends \yii\db\ActiveRecord
 {
@@ -52,8 +52,8 @@ class SemesterAktif extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTbMatakuliahs()
+    public function getTbMengajars()
     {
-        return $this->hasMany(Matakuliah::className(), ['id_semester_aktif' => 'id_semester_aktif']);
+        return $this->hasMany(Mengajar::className(), ['id_semester_aktif' => 'id_semester_aktif']);
     }
 }

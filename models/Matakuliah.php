@@ -10,9 +10,7 @@ use Yii;
  * @property int $id_matakuliah
  * @property string $nama
  * @property int $sks
- * @property int $id_semester_aktif
  *
- * @property TbSemesterAktif $semesterAktif
  * @property TbMengajar[] $tbMengajars
  */
 class Matakuliah extends \yii\db\ActiveRecord
@@ -31,10 +29,9 @@ class Matakuliah extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'sks', 'id_semester_aktif'], 'required'],
-            [['sks', 'id_semester_aktif'], 'integer'],
+            [['nama', 'sks'], 'required'],
+            [['sks'], 'integer'],
             [['nama'], 'string', 'max' => 255],
-            [['id_semester_aktif'], 'exist', 'skipOnError' => true, 'targetClass' => SemesterAktif::className(), 'targetAttribute' => ['id_semester_aktif' => 'id_semester_aktif']],
         ];
     }
 
@@ -47,16 +44,7 @@ class Matakuliah extends \yii\db\ActiveRecord
             'id_matakuliah' => 'Id Matakuliah',
             'nama' => 'Nama',
             'sks' => 'Sks',
-            'id_semester_aktif' => 'Id Semester Aktif',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSemesterAktif()
-    {
-        return $this->hasOne(SemesterAktif::className(), ['id_semester_aktif' => 'id_semester_aktif']);
     }
 
     /**

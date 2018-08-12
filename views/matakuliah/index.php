@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_matakuliah',
             'nama',
             'sks',
-            'id_semester_aktif',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

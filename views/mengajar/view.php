@@ -31,6 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_mengajar',
             'id_matakuliah',
             'nip',
+            'waktu_mulai',
+            'id_kelas',
+            'id_semester_aktif',
         ],
     ]) ?>
 
