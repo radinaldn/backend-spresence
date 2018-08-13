@@ -3,18 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\PresensiDetail;
-use app\models\PresensiDetailSearch;
-use yii\data\SqlDataProvider;
-use yii\helpers\VarDumper;
+use app\models\User;
+use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PresensiDetailController implements the CRUD actions for PresensiDetail model.
+ * UserController implements the CRUD actions for User model.
  */
-class PresensiDetailController extends Controller
+class UserController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,37 +30,12 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Menampilkan data presensi-detail berdaarkan inputan id_presensi
-     */
-
-    public function actionHistoriPresensiByIdPresensi($id){
-        $searchModel = new PresensiDetailSearch();
-
-        $sql= "SELECT tb_presensi_detail.id_presensi, tb_presensi_detail.nim,
-                    tb_mahasiswa.foto, 
-                    tb_mahasiswa.nama as nama_mahasiswa, tb_presensi_detail.status, 
-                    tb_presensi_detail.lat, tb_presensi_detail.lng, DATE_FORMAT(tb_presensi_detail.waktu, '%d %b %Y %T') as waktu, 
-                    tb_presensi_detail.jarak, tb_presensi_detail.proses
-                    FROM tb_presensi_detail INNER JOIN tb_mahasiswa
-                    WHERE tb_presensi_detail.nim = tb_mahasiswa.nim
-                    AND tb_presensi_detail.id_presensi = '$id'
-                    ORDER BY tb_presensi_detail.waktu DESC";
-
-        $dataProvider = new SqlDataProvider(['sql' => $sql]);
-
-        return $this->render('histori-presensi-by-id-presensi', [
-            'searchModel'=>$searchModel,
-            'dataProvider'=>$dataProvider,
-        ]);
-    }
-
-    /**
-     * Lists all PresensiDetail models.
+     * Lists all User models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new PresensiDetailSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -72,8 +45,8 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Displays a single PresensiDetail model.
-     * @param string $id
+     * Displays a single User model.
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -85,16 +58,16 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Creates a new PresensiDetail model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new PresensiDetail();
+        $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_presensi]);
+            return $this->redirect(['view', 'id' => $model->id_web_user]);
         }
 
         return $this->render('create', [
@@ -103,9 +76,9 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Updates an existing PresensiDetail model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -114,7 +87,7 @@ class PresensiDetailController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_presensi]);
+            return $this->redirect(['view', 'id' => $model->id_web_user]);
         }
 
         return $this->render('update', [
@@ -123,9 +96,9 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Deletes an existing PresensiDetail model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
+     * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -137,15 +110,15 @@ class PresensiDetailController extends Controller
     }
 
     /**
-     * Finds the PresensiDetail model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @return PresensiDetail the loaded model
+     * @param integer $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = PresensiDetail::findOne($id)) !== null) {
+        if (($model = User::findOne($id)) !== null) {
             return $model;
         }
 

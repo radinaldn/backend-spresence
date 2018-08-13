@@ -5,6 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Presensi;
 use app\models\PresensiSearch;
+use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
+use yii\data\SqlDataProvider;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -43,6 +47,39 @@ class PresensiController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
+
+    /**
+     * Menampilkan data histori mengajar berdasarka inputan id_mengajar
+     */
+
+    public function actionHistoriMengajarByIdMengajar($id){
+
+        $searchModel = new PresensiSearch();
+
+        $sql = "SELECT tb_presensi.id_presensi,
+                    (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_hadir, 
+                    (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Tidak Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_tidak_hadir, 
+                    tb_dosen.nama as nama_dosen, tb_matakuliah.nama as nama_matakuliah,
+                    tb_presensi.pertemuan, tb_kelas.nama as kelas, tb_ruangan.nama as nama_ruangan, DATE_FORMAT(tb_presensi.waktu, '%d %b %Y %T') as waktu 
+                    FROM tb_presensi INNER JOIN tb_mengajar, tb_dosen, tb_matakuliah, tb_kelas, tb_ruangan 
+                    WHERE tb_presensi.id_mengajar = tb_mengajar.id_mengajar 
+                    AND tb_mengajar.nip = tb_dosen.nip 
+                    AND tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
+                    AND tb_mengajar.id_kelas = tb_kelas.id_kelas 
+                    AND tb_presensi.id_ruangan = tb_ruangan.id_ruangan
+                    AND tb_presensi.id_mengajar = '$id'
+                    ORDER BY tb_presensi.waktu DESC";
+
+//
+        $dataProvider = new SqlDataProvider(['sql' => $sql]);
+
+
+        return $this->render('histori-mengajar-by-id-mengajar', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
 
     /**
      * Displays a single Presensi model.

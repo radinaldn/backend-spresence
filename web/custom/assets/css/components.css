@@ -1351,7 +1351,19 @@ table.dataTable td.focus {
   font-size: 12px;
   margin: 0;
 }
+.inbox-widget .inbox-item .inbox-item-content {
+  color: #98a6ad;
+  margin-left: 55px;
+  font-size: 12px;
+}
+.inbox-widget .inbox-item .inbox-item-content-right {
+  float: right;
+  color: #98a6ad;
+  margin-left: 55px;
+  font-size: 12px;
+}
 .inbox-widget .inbox-item .inbox-item-date {
+  padding-bottom: 100px;
   color: #98a6ad;
   font-size: 11px;
   position: absolute;

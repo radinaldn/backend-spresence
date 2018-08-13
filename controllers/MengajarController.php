@@ -5,6 +5,9 @@ namespace app\controllers;
 use Yii;
 use app\models\Mengajar;
 use app\models\MengajarSearch;
+use yii\data\ActiveDataProvider;
+use yii\data\SqlDataProvider;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,14 +38,26 @@ class MengajarController extends Controller
      */
     public function actionIndex()
     {
+        $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as dosen, tb_dosen.foto,
+                    tb_kelas.nama as kelas, DATE_FORMAT(waktu_mulai,'%H:%i:%s') as waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
+                    as hari, tb_matakuliah.nama as matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
+                    FROM tb_mengajar INNER JOIN tb_matakuliah, tb_semester_aktif, tb_dosen, tb_kelas 
+                    WHERE tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
+                    AND tb_mengajar.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
+                    AND tb_mengajar.nip = tb_dosen.nip 
+                    AND tb_mengajar.id_kelas = tb_kelas.id_kelas    
+                    AND tb_semester_aktif.status = 'Aktif' 
+                    ORDER BY tb_mengajar.waktu_mulai ASC";
+
         $searchModel = new MengajarSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = new SqlDataProvider(['sql' => $sql]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Displays a single Mengajar model.

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Mahasiswa;
 use app\models\MahasiswaSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -38,9 +39,16 @@ class MahasiswaController extends Controller
         $searchModel = new MahasiswaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+//        $query = Mahasiswa::find();
+//
+//        $dataProvider = new ActiveDataProvider([
+//            'query'=>$query,
+//        ]);
+
+
         return $this->render('index', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

@@ -42,7 +42,7 @@ class Matakuliah extends \yii\db\ActiveRecord
     {
         return [
             'id_matakuliah' => 'Id Matakuliah',
-            'nama' => 'Nama',
+            'nama' => 'Matakuliah',
             'sks' => 'Sks',
         ];
     }

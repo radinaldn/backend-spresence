@@ -2,8 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\KehadiranDosen;
+use app\models\Presensi;
+use app\models\SemesterAktif;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -61,7 +65,27 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if(Yii::$app->user->isGuest){
+            return Yii::$app->getResponse()->redirect(Yii::$app->getHomeUrl()."site/login");
+        }
+
+        // mendapatkan data semester aktif
+        $FindSemesterAktif = SemesterAktif::find()
+            ->where(['tb_semester_aktif.status' => 'Aktif'])
+            ->one();
+
+        // mendapatkan data Perkuliahan yang sedang berlangsung hari ini
+        $today = date('Y-m-d');
+        $PresensiFindAllByDate = Presensi::findAllByDate($today);
+
+        // mendapatkan data Kehadiran Dosen saat ini
+        $KehadiranDosenFindAllDetail = KehadiranDosen::findAllDetail();
+
+        return $this->render('index',[
+            'FindSemesterAktif' => $FindSemesterAktif,
+            'PresensiFindAllByDate' => $PresensiFindAllByDate,
+            'KehadiranDosenFindAllDetail' => $KehadiranDosenFindAllDetail,
+            ]);
     }
 
     /**
@@ -71,6 +95,7 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $this->layout = 'login';
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

@@ -45,7 +45,7 @@ class Jurusan extends \yii\db\ActiveRecord
         return [
             'id_jurusan' => 'Id Jurusan',
             'id_fakultas' => 'Id Fakultas',
-            'nama' => 'Nama',
+            'nama' => 'Jurusan',
         ];
     }
 

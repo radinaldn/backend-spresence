@@ -49,7 +49,7 @@ class Dosen extends \yii\db\ActiveRecord
             'nip' => 'Nip',
             'password' => 'Password',
             'imei' => 'IMEI',
-            'nama' => 'Nama Dosen',
+            'nama' => 'Dosen',
             'jk' => 'Jenis Kelamin',
             'foto' => 'Foto',
         ];

@@ -81,7 +81,7 @@ CustomAsset::register($this);
                             <li><a href="javascript:void(0)"><i class="ti-user m-r-5"></i> Profile</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-settings m-r-5"></i> Settings</a></li>
                             <li><a href="javascript:void(0)"><i class="ti-lock m-r-5"></i> Lock screen</a></li>
-                            <li><a href="<?= Yii::$app->request->getBaseUrl() ?>/site/logout"><i class="ti-power-off m-r-5"></i> Logout</a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-power-off m-r-5"></i> Logout</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -107,27 +107,30 @@ CustomAsset::register($this);
                 <!-- Navigation Menu-->
                 <ul class="navigation-menu">
                     <li class="active">
-                        <a href="<?= Yii::$app->getHomeUrl() ?>" class=""><i class="zmdi zmdi-view-dashboard"></i> <span> Halaman Utama </span> </a>
+                        <a href="<?= Url::to(['home/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Halaman Utama </span> </a>
                     </li>
 
                     <li class="">
-                        <a href="<?= Url::to(['mengajar/index']); ?>" class=""><i class="zmdi zmdi-graduation-cap"></i> <span> Perkuliahan </span> </a>
+                        <a href="<?= Url::to(['matakuliah/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Matakuliah </span> </a>
                     </li>
                     <li class="">
-                        <a href="<?= Url::to(['mahasiswa/index']); ?>" class=""><i class="zmdi zmdi-account-box"></i> <span> Mahasiswa </span> </a>
+                        <a href="<?= Url::to(['mahasiswa/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Mahasiswa </span> </a>
                     </li>
                     <li class="">
-                        <a href="<?= Url::to(['dosen/index']); ?>" class=""><i class="zmdi zmdi-account-circle"></i> <span> Dosen </span> </a>
+                        <a href="<?= Url::to(['dosen/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Dosen </span> </a>
                     </li>
-
+                    <li class="">
+                        <a href="<?= Url::to(['mengajar/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Mengajar </span> </a>
+                    </li>
+                    <li class="">
+                        <a href="<?= Url::to(['mengambil/index']); ?>" class="active"><i class="zmdi zmdi-view-dashboard"></i> <span> Mengambil </span> </a>
+                    </li>
 
                     <li class="has-submenu">
                         <a href="#"><i class="zmdi zmdi-invert-colors"></i> <span> Lainnya </span> </a>
                         <ul class="submenu megamenu">
                             <li>
                                 <ul>
-                                    <li><a href="<?= Url::to(['mengambil/index']); ?>">Mengambil</a></li>
-                                    <li><a href="<?= Url::to(['matakuliah/index']); ?>">Matakuliah</a></li>
                                     <li><a href="<?= Url::to(['presensi/index']); ?>">Presensi</a></li>
                                     <li><a href="<?= Url::to(['presensi-detail/index']); ?>">Presensi Detail</a></li>
                                     <li><a href="<?= Url::to(['kelas/index']); ?>">Kelas</a></li>
@@ -154,35 +157,37 @@ CustomAsset::register($this);
 <div class="wrapper">
     <div class="container">
 
+        <div class="row">
+            <div class="col-sm-12">
 
 
-<?= $content; ?>
+                <?= $content; ?>
             </div>
         </div>
 
-<!--        <!-- Footer -->
-<!--        <footer class="footer text-right">-->
-<!--            <div class="container">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-xs-6">-->
-<!--                        2018 © Inkubator.-->
-<!--                    </div>-->
-<!--                    <div class="col-xs-6">-->
-<!--                        <ul class="pull-right list-inline m-b-0">-->
-<!--                            <li>-->
-<!--                                <a href="#">About</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="#">Help</a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="#">Contact</a>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </footer>-->
+        <!-- Footer -->
+        <footer class="footer text-right">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6">
+                        2018 © Inkubator.
+                    </div>
+                    <div class="col-xs-6">
+                        <ul class="pull-right list-inline m-b-0">
+                            <li>
+                                <a href="#">About</a>
+                            </li>
+                            <li>
+                                <a href="#">Help</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
         <!-- End Footer -->
 
     </div>
@@ -265,6 +270,10 @@ CustomAsset::register($this);
     <!-- /Right-bar -->
 
 </div>
+
+
+
+
 
 <?php $this->endBody() ?>
 </body>

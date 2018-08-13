@@ -16,7 +16,7 @@ class CustomAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        //'css/site.css',
+        'css/site.css',
         'custom/assets/plugins/morris/morris.css',
         'custom/assets/css/bootstrap.min.css',
         'custom/assets/css/core.css',
@@ -25,6 +25,7 @@ class CustomAsset extends AssetBundle
         'custom/assets/css/pages.css',
         'custom/assets/css/menu.css',
         'custom/assets/css/responsive.css',
+        //'custom/assets/css/jquery.dataTables.min.css',
     ];
     public $js = [
         'custom/assets/js/modernizr.min.js',
@@ -44,6 +45,8 @@ class CustomAsset extends AssetBundle
         'custom/assets/pages/jquery.dashboard.js',
         'custom/assets/js/jquery.core.js',
         'custom/assets/js/jquery.app.js',
+//        'custom/assets/js/jquery.dataTables.min.js',
+//        'custom/assets/js/jquery-3.3.1.js',
 //        'https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js',
 //        'https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js',
 
@@ -51,5 +54,6 @@ class CustomAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
+        'fedemotta\datatables\DataTablesAsset',
     ];
 }

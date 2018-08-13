@@ -49,7 +49,7 @@ class Fakultas extends \yii\db\ActiveRecord
     {
         return [
             'id_fakultas' => 'Id Fakultas',
-            'nama' => 'Nama',
+            'nama' => 'Fakultas',
             'titik_a_lat' => 'Titik A Lat',
             'titik_a_lng' => 'Titik A Lng',
             'titik_b_lat' => 'Titik B Lat',

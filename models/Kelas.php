@@ -40,7 +40,7 @@ class Kelas extends \yii\db\ActiveRecord
     {
         return [
             'id_kelas' => 'Id Kelas',
-            'nama' => 'Nama',
+            'nama' => 'Kelas',
         ];
     }
 
