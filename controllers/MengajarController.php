@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\SemesterAktif;
 use Yii;
 use app\models\Mengajar;
 use app\models\MengajarSearch;
@@ -38,7 +39,27 @@ class MengajarController extends Controller
      */
     public function actionIndex()
     {
-        $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as dosen, tb_dosen.foto,
+        $sql = null;
+
+        switch (Yii::$app->user->identity->level){
+            case "Dosen":
+
+                $NIP = Yii::$app->user->identity->nip;
+
+                $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as dosen, tb_dosen.foto,
+                    tb_kelas.nama as kelas, DATE_FORMAT(waktu_mulai,'%H:%i:%s') as waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
+                    as hari, tb_matakuliah.nama as matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
+                    FROM tb_mengajar INNER JOIN tb_matakuliah, tb_semester_aktif, tb_dosen, tb_kelas 
+                    WHERE tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
+                    AND tb_mengajar.id_semester_aktif = tb_semester_aktif.id_semester_aktif 
+                    AND tb_mengajar.nip = tb_dosen.nip 
+                    AND tb_mengajar.id_kelas = tb_kelas.id_kelas    
+                    AND tb_semester_aktif.status = 'Aktif'
+                    AND tb_mengajar.nip = '$NIP' 
+                    ORDER BY tb_mengajar.waktu_mulai ASC";
+                break;
+            default :
+                $sql = "SELECT tb_mengajar.id_mengajar, tb_mengajar.nip, tb_dosen.nama as dosen, tb_dosen.foto,
                     tb_kelas.nama as kelas, DATE_FORMAT(waktu_mulai,'%H:%i:%s') as waktu_mulai, DAYNAME(tb_mengajar.waktu_mulai) 
                     as hari, tb_matakuliah.nama as matakuliah, tb_matakuliah.sks, tb_semester_aktif.status 
                     FROM tb_mengajar INNER JOIN tb_matakuliah, tb_semester_aktif, tb_dosen, tb_kelas 
@@ -48,13 +69,21 @@ class MengajarController extends Controller
                     AND tb_mengajar.id_kelas = tb_kelas.id_kelas    
                     AND tb_semester_aktif.status = 'Aktif' 
                     ORDER BY tb_mengajar.waktu_mulai ASC";
+                break;
+        }
+
 
         $searchModel = new MengajarSearch();
-        $dataProvider = new SqlDataProvider(['sql' => $sql]);
+        $dataProvider = Yii::$app->db->createCommand($sql)->queryAll();
+        $FindSemesterAktif = SemesterAktif::find()
+            ->where(['tb_semester_aktif.status' => 'Aktif'])
+            ->one();
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'FindSemesterAktif' => $FindSemesterAktif,
         ]);
     }
 

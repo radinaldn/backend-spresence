@@ -23,6 +23,13 @@ use Yii;
  */
 class Mengajar extends \yii\db\ActiveRecord
 {
+    const SENIN = 'Monday';
+    const SELASA = 'Tuesday';
+    const RABU = 'Wednesday';
+    const KAMIS = 'Thursday';
+    const JUMAT = 'Friday';
+    const SABTU = 'Saturday';
+
     /**
      * {@inheritdoc}
      */

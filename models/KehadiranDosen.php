@@ -14,6 +14,7 @@ use Yii;
  *
  * @property TbDosen $nip0
  */
+header('Access-Control-Allow-Origin: *');
 class KehadiranDosen extends \yii\db\ActiveRecord
 {
     const HADIR = "Hadir";
@@ -68,17 +69,5 @@ class KehadiranDosen extends \yii\db\ActiveRecord
         return $this->hasOne(Dosen::className(), ['nip' => 'nip']);
     }
 
-    /**
-     * Mendapatkan semua data kehadiran dosen
-     */
 
-    public static function findAllDetail(){
-        $sql = "SELECT tb_kehadiran_dosen.nip, tb_dosen.nama as nama_dosen, tb_dosen.foto, 
-                    tb_kehadiran_dosen.status_kehadiran, tb_kehadiran_dosen.nama_kota, DATE_FORMAT(tb_kehadiran_dosen.last_update, \"%d/%m/%Y %H:%i:%s\") as last_update
-                    FROM tb_kehadiran_dosen INNER JOIN tb_dosen 
-                    WHERE tb_kehadiran_dosen.nip = tb_dosen.nip
-                    ORDER BY tb_kehadiran_dosen.last_update DESC";
-
-        return Yii::$app->db->createCommand($sql)->queryAll();;
-    }
 }

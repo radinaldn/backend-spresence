@@ -102,6 +102,6 @@ class Presensi extends \yii\db\ActiveRecord
                     ORDER BY tb_presensi.waktu DESC";
 
 
-        return Yii::$app->db->createCommand($sql)->queryAll();;
+        return Yii::$app->db->createCommand($sql)->queryAll();
     }
 }

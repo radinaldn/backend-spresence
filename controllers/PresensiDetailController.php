@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Presensi;
 use Yii;
 use app\models\PresensiDetail;
 use app\models\PresensiDetailSearch;
@@ -50,9 +51,12 @@ class PresensiDetailController extends Controller
 
         $dataProvider = new SqlDataProvider(['sql' => $sql]);
 
+        $modelPresensi = Presensi::find()->where(['id_presensi' => $id])->one();
+
         return $this->render('histori-presensi-by-id-presensi', [
             'searchModel'=>$searchModel,
             'dataProvider'=>$dataProvider,
+            'modelPresensi'=>$modelPresensi,
         ]);
     }
 

@@ -15,6 +15,7 @@ $config = [
     // Need to get one level up:
     'basePath' => dirname(__DIR__).'/..',
     'bootstrap' => ['log'],
+    'timeZone' => 'Asia/Jakarta',
     'components' => [
         'response' => [
             // ...

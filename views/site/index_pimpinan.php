@@ -5,7 +5,7 @@
 use app\models\KehadiranDosen;
 use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = 'Smart Presence | Beranda '.Yii::$app->user->identity->level;
 ?>
 <!-- Page-Title -->
 <div class="row">
@@ -121,7 +121,18 @@ $this->title = 'My Yii Application';
 
 </div>
 
+<button type="button" class="btn btn-primary waves-effect waves-light" id="showtoast">Show Toast</button>
+
+<div class="row m-t-30">
+    <div class="col-md-12">
+        <pre id='toastrOptions'></pre>
+    </div>
+</div>
+
+
+
 
 <script type="text/javascript" src="<?= Yii::$app->getHomeUrl()?>custom/vue/axios.js"></script>
 <script type="text/javascript"src="<?= Yii::$app->getHomeUrl()?>custom/vue/vue.min.js"></script>
 <script type="text/javascript" src="<?= Yii::$app->getHomeUrl()?>custom/vue/app.js"></script>
+

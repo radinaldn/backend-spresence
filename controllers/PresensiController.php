@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Mengajar;
 use Yii;
 use app\models\Presensi;
 use app\models\PresensiSearch;
@@ -60,7 +61,7 @@ class PresensiController extends Controller
                     (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_hadir, 
                     (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Tidak Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_tidak_hadir, 
                     tb_dosen.nama as nama_dosen, tb_matakuliah.nama as nama_matakuliah,
-                    tb_presensi.pertemuan, tb_kelas.nama as kelas, tb_ruangan.nama as nama_ruangan, DATE_FORMAT(tb_presensi.waktu, '%d %b %Y %T') as waktu 
+                    tb_presensi.pertemuan, tb_presensi.status, tb_kelas.nama as kelas, tb_ruangan.nama as nama_ruangan, DATE_FORMAT(tb_presensi.waktu, '%d %b %Y %T') as waktu 
                     FROM tb_presensi INNER JOIN tb_mengajar, tb_dosen, tb_matakuliah, tb_kelas, tb_ruangan 
                     WHERE tb_presensi.id_mengajar = tb_mengajar.id_mengajar 
                     AND tb_mengajar.nip = tb_dosen.nip 
@@ -73,10 +74,14 @@ class PresensiController extends Controller
 //
         $dataProvider = new SqlDataProvider(['sql' => $sql]);
 
+        $modelMengajar = Mengajar::find()->where(['id_mengajar' => $id])->one();
+
+
 
         return $this->render('histori-mengajar-by-id-mengajar', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'modelMengajar' => $modelMengajar,
         ]);
     }
 

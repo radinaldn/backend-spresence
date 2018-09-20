@@ -75,16 +75,18 @@ class SiteController extends Controller
             ->one();
 
         // mendapatkan data Perkuliahan yang sedang berlangsung hari ini
-        $today = date('Y-m-d');
-        $PresensiFindAllByDate = Presensi::findAllByDate($today);
 
-        // mendapatkan data Kehadiran Dosen saat ini
-        $KehadiranDosenFindAllDetail = KehadiranDosen::findAllDetail();
+        $level = Yii::$app->user->identity->level;
+        $render_page = null;
+        if ($level=="Dosen"){
+            $render_page = 'index_dosen';
+        } else if ($level=="Pimpinan" || $level=="Administrator") {
+            $render_page = 'index_pimpinan';
+        }
 
-        return $this->render('index',[
+
+        return $this->render($render_page,[
             'FindSemesterAktif' => $FindSemesterAktif,
-            'PresensiFindAllByDate' => $PresensiFindAllByDate,
-            'KehadiranDosenFindAllDetail' => $KehadiranDosenFindAllDetail,
             ]);
     }
 

@@ -13,6 +13,7 @@ use app\models\Mahasiswa;
 use app\models\Mengambil;
 use app\models\Presensi;
 use app\models\PresensiDetail;
+use Pusher\Pusher;
 use Yii;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
@@ -20,7 +21,6 @@ use yii\web\Response;
 
 class PresensiDetailController extends Controller
 {
-
     /*
      * fungsi mahasiswa mengentri data presensi berdasarkan matakuliah, dosen pengajar, pertemuan
      */
@@ -338,6 +338,28 @@ class PresensiDetailController extends Controller
         $presensi = Presensi::findOne($id_presensi);
         $presensi->status = "close";
         $presensi->update(false);
+
+        $options = array(
+            'cluster' => 'ap1',
+            'encrypted' => true
+        );
+
+        $pusher = new Pusher(
+            'bc60d7c1c853ac34dde4',
+            'd90ef6759c185d9bdbf2',
+            '539066',
+            $options
+        );
+
+        //$pusher->trigger('my-channel', 'my-event', 'app.presensiFindAllToday();');
+        $pusher->trigger('my-channel', 'my-event', [
+            'table'=>'app.presensiFindAllToday();',
+            'dosen' => $presensi->mengajar->nip0->nama,
+            'matakuliah' => $presensi->mengajar->matakuliah->nama,
+            'kelas' => $presensi->mengajar->kelas->nama,
+            'pertemuan' => $presensi->pertemuan,
+            'ruangan' => $presensi->ruangan->nama
+        ]);
     }
 
     /*
@@ -396,6 +418,47 @@ class PresensiDetailController extends Controller
         return $response;
     }
 
+    /***
+     * @return null
+     * fungsi untuk merubah status presensi menjadi Tidak Hadir dan Menambah jumlah ketidakhadiran
+     */
+
+    public function actionBatalkanPresensiDanTambahTidakHadir(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = null;
+
+        if (Yii::$app->request->isPost){
+            $data = Yii::$app->request->post();
+
+            $id_presensi = $data['id_presensi'];
+            $nim = $data['nim'];
+
+            $model = PresensiDetail::find()
+                ->where(['id_presensi' => $id_presensi])
+                ->andWhere(['nim' => $nim])
+                ->one();
+
+            $model->status = "Tidak Hadir";
+            $model->update(false);
+
+            $jatah = Mengambil::find()
+                ->innerJoinWith('mengajar')
+                ->innerJoinWith('mengajar.tbPresensis')
+                ->where(['tb_presensi.id_presensi' => $id_presensi])
+                ->andWhere(['nim' => $nim ])
+                ->one();
+
+            $jatah->jumlah_ketidakhadiran++;
+            $jatah->update(false);
+
+            $response['code'] = "200";
+            $response['status'] = "OK";
+            $response['message'] = "Presensi ".$model->nim0->nama." berhasil dibatalkan dan poin ketidakhadiran berhasil ditambah";
+        }
+
+        return $response;
+    }
+
     public function actionTerimaPresensi(){
         Yii::$app->response->format = Response::FORMAT_JSON;
         $response = null;
@@ -417,6 +480,46 @@ class PresensiDetailController extends Controller
             $response['code'] = "200";
             $response['status'] = "OK";
             $response['message'] = "Presensi ".$model->nim0->nama." berhasil diterima";
+        }
+
+        return $response;
+    }
+
+    /**
+     * @return null
+     * fungsi untuk merubah status presensi menjadi Hadir dan Mengurangi poin ketidak hadiran
+     */
+    public function actionTerimaPresensiDanKurangiTidakHadir(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = null;
+
+        if (Yii::$app->request->isPost){
+            $data = Yii::$app->request->post();
+
+            $id_presensi = $data['id_presensi'];
+            $nim = $data['nim'];
+
+            $model = PresensiDetail::find()
+                ->where(['id_presensi' => $id_presensi])
+                ->andWhere(['nim' => $nim])
+                ->one();
+
+            $model->status = "Hadir";
+            $model->update(false);
+
+            $jatah = Mengambil::find()
+                ->innerJoinWith('mengajar')
+                ->innerJoinWith('mengajar.tbPresensis')
+                ->where(['tb_presensi.id_presensi' => $id_presensi])
+                ->andWhere(['nim' => $nim ])
+                ->one();
+
+            $jatah->jumlah_ketidakhadiran--;
+            $jatah->update(false);
+
+            $response['code'] = "200";
+            $response['status'] = "OK";
+            $response['message'] = "Presensi ".$model->nim0->nama." berhasil diterima dan poin ketidakhadiran berhasil dikurangi";
         }
 
         return $response;

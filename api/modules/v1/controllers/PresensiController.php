@@ -21,10 +21,17 @@ use yii\web\Controller;
 use yii\web\Response;
 use Yii;
 use app\models\Presensi;
+use Pusher\Pusher;
 
-
+header('Access-Control-Allow-Origin: *');
 class PresensiController extends Controller
 {
+
+public $options = array(
+'cluster' => 'ap1',
+'encrypted' => true
+);
+
     /*
     mengecek apakah masih boleh absen atau tidak?
     */
@@ -239,6 +246,39 @@ class PresensiController extends Controller
                     AND tb_presensi.id_mengajar = '$id_mengajar'
                     ORDER BY tb_presensi.waktu DESC
                     ";
+
+            $response['master'] = Yii::$app->db->createCommand($sql)->queryAll();
+        }
+
+        return $response;
+    }
+
+    /**
+     * Fungsi untuk mendapatkan data Perkuliahan hari ini
+     */
+    public function actionFindAllToday(){
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = null;
+
+        if (Yii::$app->request->isGet){
+            $date = date('Y-m-d');
+
+
+            $sql = "SELECT tb_presensi.id_presensi,
+                    (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_hadir, 
+                    (SELECT COUNT(nim) FROM tb_presensi_detail WHERE tb_presensi_detail.status = \"Tidak Hadir\" AND tb_presensi_detail.id_presensi = tb_presensi.id_presensi) as total_tidak_hadir, 
+                    tb_dosen.nama as nama_dosen, tb_dosen.foto,tb_matakuliah.nama as nama_matakuliah,
+                    tb_presensi.pertemuan, tb_kelas.nama as kelas, tb_ruangan.nama as nama_ruangan, DATE_FORMAT(tb_presensi.waktu, '%r') as waktu 
+                    FROM tb_presensi INNER JOIN tb_mengajar, tb_dosen, tb_matakuliah, tb_kelas, tb_ruangan 
+                    WHERE tb_presensi.id_mengajar = tb_mengajar.id_mengajar 
+                    AND tb_mengajar.nip = tb_dosen.nip 
+                    AND tb_mengajar.id_matakuliah = tb_matakuliah.id_matakuliah 
+                    AND tb_mengajar.id_kelas = tb_kelas.id_kelas 
+                    AND tb_presensi.id_ruangan = tb_ruangan.id_ruangan
+                    AND DATE_FORMAT(tb_presensi.waktu,'%Y-%m-%d') = '$date'
+                    ORDER BY tb_presensi.waktu DESC";
+
 
             $response['master'] = Yii::$app->db->createCommand($sql)->queryAll();
         }

@@ -10,10 +10,12 @@ namespace app\api\modules\v1\controllers;
 
 use app\models\Dosen;
 use app\models\KehadiranDosen;
+use Pusher\Pusher;
 use yii\rest\Controller;
 use yii\web\Response;
 use Yii;
 
+header('Access-Control-Allow-Origin: *');
 class DosenController extends Controller
 {
     /*
@@ -99,9 +101,45 @@ class DosenController extends Controller
             $response['code'] = '200';
             $response['status'] = 'success';
             $response['message'] = 'Kehadiran berhasil diperbarui';
+
+            $options = array(
+                'cluster' => 'ap1',
+                'encrypted' => true
+            );
+
+            $pusher = new Pusher(
+                'bc60d7c1c853ac34dde4',
+                'd90ef6759c185d9bdbf2',
+                '539066',
+                $options
+            );
+
+            $pusher->trigger('my-channel', 'my-event', 'app.kehadiranDosenFindAll();');
         }
 
         return $response;
+    }
+
+    /**
+     * Mendapatkan semua data kehadiran dosen
+     */
+
+    public static function actionKehadiranDosenFindAllDetail(){
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $response = null;
+
+        if (Yii::$app->request->isGet){
+            $sql = "SELECT tb_kehadiran_dosen.nip, tb_dosen.nama as nama_dosen, tb_dosen.foto, 
+                    tb_kehadiran_dosen.status_kehadiran, tb_kehadiran_dosen.nama_kota, DATE_FORMAT(tb_kehadiran_dosen.last_update, \"%d/%m/%Y %H:%i:%s\") as last_update
+                    FROM tb_kehadiran_dosen INNER JOIN tb_dosen 
+                    WHERE tb_kehadiran_dosen.nip = tb_dosen.nip
+                    ORDER BY tb_kehadiran_dosen.last_update DESC";
+
+            $response['master'] = Yii::$app->db->createCommand($sql)->queryAll();;
+        }
+
+        return $response;
+
     }
 
 }

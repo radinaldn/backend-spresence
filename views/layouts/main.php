@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use app\models\Dosen;
 use yii\helpers\Url;
 use app\widgets\Alert;
 use yii\helpers\Html;
@@ -13,7 +14,14 @@ use app\assets\CustomAsset;
 
 CustomAsset::register($this);
 ?>
-<?php $this->beginPage() ?>
+
+<!---->
+
+<?php $this->beginPage();
+header('Access-Control-Allow-Origin: *');
+include Yii::$app->basePath.'/views/layouts/show_cur_datetime.php';
+?>
+
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -22,16 +30,30 @@ CustomAsset::register($this);
     <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
     <meta name="author" content="Coderthemes">
 
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="shortcut icon" href="<?= Yii::$app->request->baseUrl ?>/custom/assets/images/favicon.ico">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 
+<body onload="tampilkanwaktu();setInterval('tampilkanwaktu()', 1000);">
+
+<div>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script>
+
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('bc60d7c1c853ac34dde4', {
+            cluster: 'ap1',
+            encrypted: true
+        });
 
 
-<body>
 
+    </script>
+<div id="root">
 <!-- Navigation Bar-->
 <header id="topnav">
     <div class="topbar-main">
@@ -55,25 +77,39 @@ CustomAsset::register($this);
                     </li>
                     <li>
                         <!-- Notification -->
-                        <div class="notification-box">
-                            <ul class="list-inline m-b-0">
-                                <li>
-                                    <a href="javascript:void(0);" class="right-bar-toggle">
-                                        <i class="zmdi zmdi-notifications-none"></i>
-                                    </a>
-                                    <div class="noti-dot">
-                                        <span class="dot"></span>
-                                        <span class="pulse"></span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+<!--                        <div class="notification-box">-->
+<!--                            <ul class="list-inline m-b-0">-->
+<!--                                <li>-->
+<!--                                    <a href="javascript:void(0);" class="right-bar-toggle">-->
+<!--                                        <i class="zmdi zmdi-notifications-none"></i>-->
+<!--                                    </a>-->
+<!--                                    <div class="noti-dot">-->
+<!--                                        <span class="dot"></span>-->
+<!--                                        <span class="pulse"></span>-->
+<!--                                    </div>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
                         <!-- End Notification bar -->
                     </li>
 
                     <li class="dropdown user-box">
                         <a href="" class="dropdown-toggle waves-effect waves-light profile " data-toggle="dropdown" aria-expanded="true">
-                            <img src="<?= Yii::$app->getHomeUrl() ?>custom/assets/images/users/avatar-1.jpg" alt="user-img" class="img-circle user-img">
+                            <?php
+                            $homeUrl = Yii::$app->getHomeUrl();
+                            $fotoDosen = Yii::$app->user->identity->foto;
+                            switch (Yii::$app->user->identity->level){
+                                case "Dosen":
+                                    echo "<img src='$homeUrl/files/images/dosen/$fotoDosen' alt='user-img' class='img-circle user-img'>";
+                                    break;
+                                case "Administrator":
+                                    echo "<img src='$homeUrl/custom/assets/images/users/avatar-1.jpg' alt='user-img' class='img-circle user-img'>";
+                                    break;
+                                case "Pimpinan":
+                                    echo "<img src='$homeUrl/files/images/dosen/$fotoDosen' alt='user-img' class='img-circle user-img'>";
+                                    break;
+                            }
+                            ?>
                             <div class="user-status away"><i class="zmdi zmdi-dot-circle"></i></div>
                         </a>
 
@@ -106,8 +142,10 @@ CustomAsset::register($this);
             <div id="navigation">
                 <!-- Navigation Menu-->
                 <ul class="navigation-menu">
-                    <li class="active">
-                        <a href="<?= Yii::$app->getHomeUrl() ?>" class=""><i class="zmdi zmdi-view-dashboard"></i> <span> Halaman Utama </span> </a>
+
+
+                    <li class="">
+                        <a href="<?= Yii::$app->getHomeUrl() ?>" class=""><i class="zmdi zmdi-view-dashboard"></i> <span> Beranda <?= Yii::$app->user->identity->level ?> </span> </a>
                     </li>
 
                     <li class="">
@@ -120,6 +158,11 @@ CustomAsset::register($this);
                         <a href="<?= Url::to(['dosen/index']); ?>" class=""><i class="zmdi zmdi-account-circle"></i> <span> Dosen </span> </a>
                     </li>
 
+                    <?php if (Yii::$app->user->identity->level=="Administrator" || Yii::$app->user->identity->level=="Pimpinan") { ?>
+
+                        <li class="">
+                            <a href="<?= Url::to(['semester-aktif/index']); ?>" class=""><i class="zmdi zmdi-graduation-cap"></i> <span> Semester Aktif </span> </a>
+                        </li>
 
                     <li class="has-submenu">
                         <a href="#"><i class="zmdi zmdi-invert-colors"></i> <span> Lainnya </span> </a>
@@ -134,11 +177,16 @@ CustomAsset::register($this);
                                     <li><a href="<?= Url::to(['ruangan/index']); ?>">Ruangan</a></li>
                                     <li><a href="<?= Url::to(['fakultas/index']); ?>">Fakultas</a></li>
                                     <li><a href="<?= Url::to(['jurusan/index']); ?>">Jurusan</a></li>
-                                    <li><a href="<?= Url::to(['semester-aktif/index']); ?>">Semester Aktif</a></li>
                                     <li><a href="<?= Url::to(['site/logout']); ?>">Keluar</a></li>
                                 </ul>
                             </li>
                         </ul>
+                    </li>
+
+                    <?php } ?>
+
+                    <li class="">
+                        <a href="<?= Url::to(['site/logout']); ?>" class=""><i class="fa fa-power-off"></i> <span> Keluar </span> </a>
                     </li>
 
 
@@ -154,6 +202,18 @@ CustomAsset::register($this);
 <div class="wrapper">
     <div class="container">
 
+
+        <span class="label label-info"><?php //cetakWelcome();
+            echo cetakTanggalNow();
+            ?>
+            </span><span class="label label-inverse">
+            Pukul :
+            <!-- /*Menampilkan Waktu*/ -->
+            <span id="clock"></span>
+          <!-- /*Selesai Menampilkan Waktu*/
+          /*Menampilakan Hari*/ -->
+            </span>
+          </br>
 
 
 <?= $content; ?>
@@ -265,8 +325,106 @@ CustomAsset::register($this);
     <!-- /Right-bar -->
 
 </div>
+</div>
 
 <?php $this->endBody() ?>
+
+
+
+<script type="text/javascript">
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+        // logicnya jika ada sinyal dari pusher langsung refresh API perkuliahan hari ini & kehadiran dosen
+        $(function () {
+            var i = -1;
+            var toastCount = 0;
+            var $toastlast;
+
+
+
+                var shortCutFunction = 'info';
+                var msg = 'Memulai '+data.matakuliah+' ('+data.kelas+') Pertemuan-'+data.pertemuan+' di '+data.ruangan;
+                var title = data.dosen;
+                var $showDuration = '300';
+                var $hideDuration = '1000';
+                var $timeOut = '10000';
+                var $extendedTimeOut = '1000';
+                var $showEasing = 'swing';
+                var $hideEasing = 'linear';
+                var $showMethod = 'fadeIn';
+                var $hideMethod = 'fadeOut';
+                var toastIndex = toastCount++;
+                var addClear = null;
+
+                toastr.options = {
+                    closeButton: 'false',
+                    debug: 'false',
+                    newestOnTop: 'true',
+                    progressBar: null,
+                    positionClass: 'toast-top-right',
+                    preventDuplicates: null,
+                    onclick: null
+                };
+
+                if ($('#addBehaviorOnToastClick').prop('checked')) {
+                    toastr.options.onclick = function () {
+                        alert('You can perform some custom action after a toast goes away');
+                    };
+                }
+
+
+                $('#toastrOptions').text('Command: toastr["'
+                    + shortCutFunction
+                    + '"]("'
+                    + msg
+                    + (title ? '", "' + title : '')
+                    + '")\n\ntoastr.options = '
+                    + JSON.stringify(toastr.options, null, 2)
+                );
+
+                var $toast = toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
+                $toastlast = $toast;
+
+                if (typeof $toast === 'undefined') {
+                    return;
+                }
+
+                if ($toast.find('#okBtn').length) {
+                    $toast.delegate('#okBtn', 'click', function () {
+                        alert('you clicked me. i was toast #' + toastIndex + '. goodbye!');
+                        $toast.remove();
+                    });
+                }
+                if ($toast.find('#surpriseBtn').length) {
+                    $toast.delegate('#surpriseBtn', 'click', function () {
+                        alert('Surprise! you clicked me. i was toast #' + toastIndex + '. You could perform an action here.');
+                    });
+                }
+                if ($toast.find('.clear').length) {
+                    $toast.delegate('.clear', 'click', function () {
+                        toastr.clear($toast, {force: true});
+                    });
+                }
+            ;
+
+            function getLastToast() {
+                return $toastlast;
+            }
+
+            $('#clearlasttoast').click(function () {
+                toastr.clear(getLastToast());
+            });
+            $('#cleartoasts').click(function () {
+                toastr.clear();
+            });
+        })
+    });
+
+
+</script>
+
 </body>
 </html>
 <?php $this->endPage() ?>
+
